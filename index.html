@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="Ventuying Bunny - เกมสุ่มการ์ดกระต่ายผจญภัย">
+    <title>🐰 Ventuying Bunny - Random Cards</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- ===== SETUP SCREEN ===== -->
+    <section id="setup-screen" class="screen active">
+        <div class="setup-container">
+            <div class="logo-area">
+                <h1 class="game-logo">
+                    <span class="logo-emoji">🐰</span>
+                    <span class="logo-text">Ventuying Bunny</span>
+                    <span class="logo-subtitle">Random Cards</span>
+                </h1>
+            </div>
+            <div class="setup-card glass-card">
+                <h2 class="setup-title">🎮 ตั้งค่าผู้เล่น</h2>
+                <div class="player-count-section">
+                    <label>จำนวนผู้เล่น</label>
+                    <div class="count-selector">
+                        <button id="btn-decrease" class="count-btn" aria-label="ลดจำนวน">−</button>
+                        <span id="player-count-display" class="count-display">2</span>
+                        <button id="btn-increase" class="count-btn" aria-label="เพิ่มจำนวน">+</button>
+                    </div>
+                </div>
+                <div id="player-names-container" class="player-names-container"></div>
+                <button id="btn-start-game" class="btn-start">
+                    <span class="btn-icon">🚀</span><span>เริ่มเกม!</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== GAME SCREEN ===== -->
+    <section id="game-screen" class="screen">
+        <header class="game-header">
+            <h1 class="header-title">🐰 Ventuying Bunny</h1>
+            <div class="header-actions">
+                <button id="btn-show-log" class="btn-icon-action" title="ดูประวัติ">📋</button>
+                <button id="btn-reset-game" class="btn-icon-action" title="เกมใหม่">🔄</button>
+            </div>
+        </header>
+
+        <div class="current-player-bar">
+            <div class="player-turn-label">ตาของ</div>
+            <div id="current-player-name" class="current-player-name">Player 1</div>
+            <div class="turn-indicator-dots" id="turn-dots"></div>
+        </div>
+
+        <!-- Card Stage -->
+        <div class="card-stage">
+            <!-- Shuffle overlay -->
+            <div id="shuffle-overlay" class="shuffle-overlay hidden">
+                <div class="shuffle-cards" id="shuffle-cards"></div>
+            </div>
+            <!-- Main card -->
+            <div id="card-container" class="card-container">
+                <div class="card" id="main-card">
+                    <div class="card-inner" id="card-inner">
+                        <div class="card-face card-back">
+                            <div class="card-back-design">
+                                <div class="cb-pattern">
+                                    <span>🐾</span><span>🥕</span><span>🐾</span>
+                                    <span>🥕</span><span>⭐</span><span>🥕</span>
+                                    <span>🐾</span><span>🥕</span><span>🐾</span>
+                                </div>
+                                <div class="cb-center">?</div>
+                            </div>
+                        </div>
+                        <div class="card-face card-front" id="card-front">
+                            <div class="card-art" id="card-art"></div>
+                            <div class="card-info" id="card-info">
+                                <span class="card-name" id="card-name"></span>
+                                <div class="card-nuggets" id="card-nuggets"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-area">
+            <button id="btn-spin" class="btn-spin">
+                <span class="spin-icon">🎰</span>
+                <span class="spin-text">สุ่มการ์ด!</span>
+            </button>
+        </div>
+
+        <div class="players-bar" id="players-bar"></div>
+    </section>
+
+    <!-- ===== LOG MODAL ===== -->
+    <div id="log-modal" class="modal-overlay hidden">
+        <div class="modal glass-card">
+            <div class="modal-header">
+                <h2>📋 ประวัติการเล่น</h2>
+                <button id="btn-close-log" class="btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="log-list" class="log-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-clear-log" class="btn-clear-log">🗑️ ล้างประวัติ</button>
+                <button id="btn-export-log" class="btn-export-log">📥 Export</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== RESULT POPUP ===== -->
+    <div id="result-popup" class="result-popup hidden">
+        <div class="result-content" id="result-content">
+            <div class="result-emoji" id="result-emoji">🐰</div>
+            <div class="result-text" id="result-text"></div>
+            <div class="result-player" id="result-player"></div>
+            <div class="result-hint">แตะเพื่อไปต่อ</div>
+        </div>
+    </div>
+    <!-- ===== CONFIRM MODAL ===== -->
+    <div id="confirm-modal" class="modal-overlay hidden">
+        <div class="confirm-box glass-card">
+            <div class="confirm-icon">🔄</div>
+            <div class="confirm-msg" id="confirm-msg">เริ่มเกมใหม่?</div>
+            <div class="confirm-actions">
+                <button id="btn-confirm-no" class="confirm-btn confirm-no">ยกเลิก</button>
+                <button id="btn-confirm-yes" class="confirm-btn confirm-yes">ตกลง</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+
+# Generated assets (if any)
+assets/*.png
+
+# Logs
+*.log
